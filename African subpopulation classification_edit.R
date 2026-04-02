@@ -81,6 +81,6 @@ autoplot( PCA , data = Cleaned_AFR_DF, colour = "pop", main = "PCA: PC1 vs PC2" 
 0
 
 #Test output for downstream analysis
-X_filt_head <- X_filtered[1:50, ]
-Y_head <- Cleaned_AFR_DF[1:50, ]
+X_filt_head <- X_filtered[1:10, ]
+Y_head <- Cleaned_AFR_DF[1:10, ]
 
