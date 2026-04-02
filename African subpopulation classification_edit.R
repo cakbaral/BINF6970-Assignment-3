@@ -9,6 +9,8 @@ Dock3 <- readVcf("gene vcf files/DOCK3.vcf.gz")
 
 #Data Exploration
 APOBEC3G
+
+#dim(vcf)
 samples(header(APOBEC3G))
 seqlevels(rowRanges(APOBEC3G))
 rowRanges(APOBEC3G)
@@ -78,6 +80,7 @@ percent_var
 #Plot
 autoplot( PCA , data = Cleaned_AFR_DF, colour = "pop", main = "PCA: PC1 vs PC2" )
 
+
 subset_df <- Cleaned_AFR_DF[Cleaned_AFR_DF$pop %in% c("ACB", "GWD", "YRI"), ]
 X2 <- subset_df[, -(1:4)]
 
@@ -93,3 +96,9 @@ percent_var2
 
 #Plot
 autoplot( PCA2 , data = subset_df, colour = "pop", main = "PCA: PC1 vs PC2" )
+
+
+#Test output for downstream analysis
+X_filt_head <- X_filtered[1:10, ]
+Y_head <- Cleaned_AFR_DF[1:10, ]
+
