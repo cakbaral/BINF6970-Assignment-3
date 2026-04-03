@@ -2,6 +2,17 @@ library("VariantAnnotation")
 library("tidyverse")
 library("ggplot2")
 library("ggfortify")
+library(glmnet)
+library(caret)
+library(pROC)
+library(readxl)
+library(dplyr)
+library("stringr")
+library(rpart)
+library(randomForest)
+library(rpart.plot)
+library(rattle)
+library(ipred)
 #Load data in the file
 SLC24A5<- readVcf("gene vcf files/SLC24A5.vcf.gz")
 EDAR <- readVcf("gene vcf files/EDAR.vcf.gz")
@@ -348,5 +359,63 @@ print(comparison)
 
 
 #Method 2 
-#Random forest
+#Random forest with mtry and nodesize 
+#Using X_filtered2 our Df with metadata
+set.seed(4242) 
+#Create 70/30 training test split using an index
+train.index <- sample(1:nrow(X_filtered2), round(0.70*nrow(X_filtered2),0))
 
+cols_to_drop <- c("sample","pop","gender")
+
+X_clean_RF <- X_filtered2[, !(names(X_filtered2) %in% cols_to_drop)]
+
+train_data <- X_clean_RF[train.index, ]
+test_data  <- X_clean_RF[-train.index, ]
+
+#Tune random forest using mtry
+#mtry set to 10,20,30,50 due to number of predictors
+
+set.seed(2445)
+
+
+control <- trainControl(method="repeatedcv", 
+                        number=5, 
+                        repeats=3,
+                        allowParallel = FALSE)
+
+
+modelRF <- train(
+  super_pop ~ . ,
+  data = train_data,
+  method = "rf",
+  trControl = control,
+  tuneGrid = expand.grid(mtry = c(10, 20, 30, 50))
+)
+plot(modelRF)
+
+#Variable importance
+imp <- as.data.frame(varImp(modelRF)$importance)
+
+imp$SNP <- rownames(imp)
+imp$Overall <- rowMeans(imp[, sapply(imp, is.numeric)])
+#Top 20 SNPs
+top20 <- imp[order(imp$Overall, decreasing = TRUE), ]
+top20 <- head(top20, 20)
+top20
+#plot
+ggplot(top20, aes(x = reorder(SNP, Overall), y = Overall)) +
+  geom_col() +
+  coord_flip() +
+  labs(x = "SNP", y = "Variable Importance", title = "Top 20 SNPs from random forest") +
+  theme_minimal()
+#Predict
+RFpredict <- predict(
+  modelRF,
+  newdata = test_data,
+  type = "prob"
+)[,1]
+
+roc_obj <- roc(X_filtered2[-train.index,]$super_pop,RFpredict)
+auc(roc_obj)
+#Perfecter classifier due to highly informative snps.
+plot(roc_obj)
