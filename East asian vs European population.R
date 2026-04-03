@@ -359,7 +359,7 @@ print(comparison)
 
 
 #Method 2 
-#Random forest with mtry and nodesize 
+#Random forest with mtry
 #Using X_filtered2 our Df with metadata
 set.seed(4242) 
 #Create 70/30 training test split using an index
@@ -404,10 +404,11 @@ top20 <- head(top20, 20)
 top20
 #plot
 ggplot(top20, aes(x = reorder(SNP, Overall), y = Overall)) +
-  geom_col() +
+  geom_col(fill = 'brown') +
   coord_flip() +
-  labs(x = "SNP", y = "Variable Importance", title = "Top 20 SNPs from random forest") +
+  labs(x = "SNP", y = "Variable Importance", title = "Top 20 SNPs from random forest") + 
   theme_minimal()
+?ggplot
 #Predict
 RFpredict <- predict(
   modelRF,
@@ -417,5 +418,7 @@ RFpredict <- predict(
 
 roc_obj <- roc(X_filtered2[-train.index,]$super_pop,RFpredict)
 auc(roc_obj)
-#Perfecter classifier due to highly informative snps.
+#Perfect classifier due to highly informative SNPs.
 plot(roc_obj)
+
+
