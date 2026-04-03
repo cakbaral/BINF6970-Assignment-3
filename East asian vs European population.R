@@ -178,7 +178,7 @@ ggplot(result_10_fold, aes(x = alpha)) +
   geom_line(aes(y = cvm_1se, color = "lambda.1se"), size = 1.2) +
   geom_point(aes(y = cvm_min, color = "lambda.min"), size = 3) +
   geom_point(aes(y = cvm_1se, color = "lambda.1se"), size = 3) +
-  labs(title = "CV Error vs Alpha, 10-Fold",
+  labs(title = "Deviance vs Alpha, 10-Fold",
        x = "Alpha (0=Ridge, 1=Lasso)",
        y = "Deviance",
        color = "Lambda Type") +
@@ -293,7 +293,7 @@ extract_top_predictors <- function(model, n = 10, lambda_type = "min") {
   return(result)
 }
 
-# Extract top 11 predictors for each model. 11 selected to try and identify impact of both age and the top 10 biomarkers (if that many)
+# Extract top 11 predictors for each model. 
 m10_top_min <- extract_top_predictors(model_10fold_min, n = 11, lambda_type = "min")
 print(m10_top_min)
 
