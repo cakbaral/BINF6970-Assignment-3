@@ -64,6 +64,15 @@ X <- Cleaned_DF[, -(1:4)]
 
 X_filtered <- X[, apply(X, 2, var) != 0]
 
+#Filtering low minor allele frequency below 0.01
+maf <- apply(X_filtered, 2, function(snp) {
+  p <- sum(snp, na.rm = TRUE) / (2 * sum(!is.na(snp)))
+  min(p, 1 - p)
+})
+
+X_filtered <- X_filtered[, maf > 0.01]
+
+
 # Run PCA
 PCA <- prcomp(X_filtered, center = TRUE)
 var_explained <- (PCA$sdev^2) / sum(PCA$sdev^2)
@@ -77,4 +86,6 @@ metadata_sub <-  metadata %>%
 X_filtered2 <- cbind(metadata_sub, X_filtered)
 
 #Plot
-autoplot( PCA , data = X_filtered2 , colour = "super_pop", main = "PCA: PC1 vs PC2" )
+autoplot( PCA , data = X_filtered2t , colour = "super_pop", main = "PCA: PC1 vs PC2" )
+
+
