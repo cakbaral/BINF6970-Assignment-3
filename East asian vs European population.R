@@ -170,6 +170,7 @@ best_lambda_1se_10 <- result_10_fold$lambda_1se[result_10_fold$alpha == best_alp
 
 
 #Plots for visualization and alpha grid search
+#Note: The top axis of the Elastic Net (10-Fold) - Deviance plot is not an accurate measure of non-zero coefficients. Actual non-zero coefficient number is reported in later comparative analysis.
 plot(cv_10fold, main = "Elastic Net (10-Fold) - Deviance")
 
 
@@ -216,6 +217,7 @@ best_lambda_min_20 <- result_20_fold$lambda_min[result_20_fold$alpha == best_alp
 best_lambda_1se_20 <- result_20_fold$lambda_1se[result_20_fold$alpha == best_alpha_1se_20]
 
 #Plots for visualization and alpha grid search
+#Note: The top axis of the Elastic Net (20-Fold) - Deviance plot is not an accurate measure of non-zero coefficients. Actual non-zero coefficient number is reported in later comparative analysis.
 plot(cv_20fold, main = "Elastic Net (20-Fold) - Deviance")
 
 ggplot(result_20_fold, aes(x = alpha)) +
