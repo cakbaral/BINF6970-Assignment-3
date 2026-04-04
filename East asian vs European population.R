@@ -60,7 +60,6 @@ Genotype_df <-  cbind(metadata,DF_SLC24A5,DF_EDAR)
 #We intend to use SNP data from these Ancestry informative genes to classify the population.
 COMBINED_DF <- Genotype_df %>%
   filter(super_pop %in% c("EAS", "EUR"))
-
 #Data exploration
 ggplot(COMBINED_DF, aes(x = super_pop)) +
   geom_bar(fill = "skyblue", color = "black") +
@@ -408,7 +407,7 @@ ggplot(top20, aes(x = reorder(SNP, Overall), y = Overall)) +
   coord_flip() +
   labs(x = "SNP", y = "Variable Importance", title = "Top 20 SNPs from random forest") + 
   theme_minimal()
-?ggplot
+
 #Predict
 RFpredict <- predict(
   modelRF,
@@ -417,8 +416,16 @@ RFpredict <- predict(
 )[,1]
 
 roc_obj <- roc(X_filtered2[-train.index,]$super_pop,RFpredict)
+roc_obj
 auc(roc_obj)
 #Perfect classifier due to highly informative SNPs.
-plot(roc_obj)
 
+#Error rate 
+#Training error
+tail(modelRF$finalModel$err.rate, 1)
+
+#Test error
+pred_class <- predict(modelRF, newdata = test_data)
+
+mean(pred_class != test_data$super_pop)
 
