@@ -1,3 +1,12 @@
+##**************************
+## BINF*6970 - Assignment 2
+##
+## Student Names: Cyrus Akbarally, Iroayo Toki, Sodiq Dada & William Feinman 
+##
+## Due Date: 2026-03-13
+##
+##**************************
+## _Packages used----
 library("VariantAnnotation")
 library("tidyverse")
 library("ggplot2")
@@ -430,4 +439,3 @@ tail(modelRF$finalModel$err.rate, 1)
 pred_class <- predict(modelRF, newdata = test_data)
 
 mean(pred_class != test_data$super_pop)
-
